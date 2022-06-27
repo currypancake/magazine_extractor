@@ -25,26 +25,17 @@ def extract_magazines():
 
 	num = 0
 	for i in target:
-		dir_path = f"{num}"
+		dir_path = f'{num}'
 		setDirPath(dir_path)
-		magazine_url = "http://g12017647.sp.pf.mbga.jp/" + i['href']
+		magazine_url = 'http://g12017647.sp.pf.mbga.jp/' + i['href']
 		extract_url(magazine_url, dir_path)
 		num += 1
-
-def extract_url(url, dir_path):
-	req = requests.get(url, cookies=dummy_cookies, headers=headers)
-	soup = BeautifulSoup(req.content, 'html.parser')
-	target = soup.find_all('script')[5].string.split(';')[8]
-	target = target.split('\"')
-
-	save_images(target, dir_path)
-
 
 def save_images(target, dir_path):
 	num = 0
 	for i in target:
 		if i.endswith('.png') == True :
-			img_url = "http:" + i
+			img_url = 'http:' + i
 			img_req = requests.get(img_url, cookies=dummy_cookies, headers=headers)
 
 			img_name = dir_path + f'/{num}.png'
@@ -53,6 +44,29 @@ def save_images(target, dir_path):
 
 			num += 1
 
+def find_images(target, dir_path):
+	for i in target:
+		s = i.split('\"')
+		for j in s:
+			if j.endswith('.png') == True:
+				save_images(s, dir_path)
+				return True
+	return False
+	
 
-if __name__ == "__main__":
+def extract_url(url, dir_path):
+	req = requests.get(url, cookies=dummy_cookies, headers=headers)
+	soup = BeautifulSoup(req.content, 'html.parser')
+	# target = soup.find_all('script')[5].string.split(';')[8]
+	# target = target.split('\"')
+	# save_images(target, dir_path)
+
+	target = soup.find_all('script')
+	
+	for i in target:
+		if find_images(i.text.split(';'), dir_path) == True :
+			break
+
+
+if __name__ == '__main__':
 	extract_magazines()
