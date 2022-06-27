@@ -41,11 +41,11 @@ def extract_url(url, dir_path):
 
 
 def save_images(target, dir_path):
-	num = 0;
+	num = 0
 	for i in target:
 		if i.endswith('.png') == True :
 			img_url = "http:" + i
-			img_req = requests.get(img_url, cookies=dummy_cookies, headers=headers, stream=True)
+			img_req = requests.get(img_url, cookies=dummy_cookies, headers=headers)
 
 			img_name = dir_path + f'/{num}.png'
 			with open(img_name, 'wb') as f:
